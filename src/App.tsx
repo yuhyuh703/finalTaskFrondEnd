@@ -1,6 +1,6 @@
 import Container from "@mui/material/Container"
 import CssBaseline from "@mui/material/CssBaseline"
-import Customers from "./components/customers"
+import Customers from "./components/Customers"
 import AppBar from "@mui/material/AppBar"
 import Toolbar from "@mui/material/Toolbar"
 import Typography from "@mui/material/Typography"
