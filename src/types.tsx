@@ -6,34 +6,15 @@ export type Customer = {
     phone: string;
     postcode: string;
     streetaddress: string;
-    _links: {
-        customer: {
-            href: string;
-        };
-        self: {
-            href: string;
-        };
-        trainings: {
-            href: string;
-        };
-    };   
+    id: number;
 }
 
 export type Training = {
     activity: string;
-    date: string;
+    date: number;
     duration: number;
-    _links: {
-        customer: {
-            href: string;
-        };
-        self: {
-            href: string;
-        };
-        traning: {
-            href: string;
-        }
-    };
+    id: number;
+    customer: Customer;
 }
 
 

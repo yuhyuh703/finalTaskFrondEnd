@@ -16,9 +16,6 @@ import MailIcon from "@mui/icons-material/Mail";
 import IconButton from "@mui/material/IconButton";
 import ReorderOutlinedIcon from "@mui/icons-material/ReorderOutlined";
 import { useState } from "react";
-import Customers from "./components/Customers";
-import Trainings from "./components/Trainings";
-
 
 function App() {
   const [open, setOpen] = useState(false);
