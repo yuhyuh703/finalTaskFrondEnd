@@ -2,6 +2,7 @@ import {useState, useEffect } from 'react';
 import { AllCommunityModule, ModuleRegistry, ColDef, themeMaterial } from 'ag-grid-community'; 
 import { AgGridReact } from 'ag-grid-react'; // React Data Grid Component
 import { Customer } from '../types'; // Customer type
+import AddCustomer from './AddCustomer';
 
 
 // Register all Community features
@@ -21,6 +22,10 @@ const Customers = () => {
 
 
     useEffect(() => {
+        fetchCustomer();
+    }, []);
+
+    const fetchCustomer = () => {
         fetch('https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/customers')
     .then(response => {
         if(!response.ok)
@@ -34,11 +39,12 @@ const Customers = () => {
     .catch(error => {
         console.error(error);
     });
-    }, []);
+    }
 
 
     return (
         <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column' }}>
+            <AddCustomer fetchCustomer={fetchCustomer}/>
             <div style={{ flex: 1 }}>
                 <AgGridReact
                 rowData={customers}

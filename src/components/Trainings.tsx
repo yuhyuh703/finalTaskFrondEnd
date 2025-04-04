@@ -42,6 +42,7 @@ const Trainings = () => {
 
     return (
         <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column' }}>
+            
             <div style={{ flex: 1 }}>
                <AgGridReact
                rowData={trainings}
