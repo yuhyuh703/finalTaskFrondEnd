@@ -10,17 +10,18 @@ import { Snackbar } from '@mui/material';
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
 
+
 const Customers = () => {
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [open, setOpen] = useState(false);
     const [columnDefs] = useState<ColDef<Customer>[]>([
-        {field: 'firstname', headerName: 'First Name', sortable: true, filter: true, flex: 1},
-        {field: 'lastname', headerName: 'Last Name', sortable: true, filter: true, flex: 1},
-        {field: 'streetaddress', headerName: 'Street Address', sortable: true, filter: true, flex: 1},
-        {field: 'postcode', headerName: 'Postcode', sortable: true, filter: true, flex: 1},
-        {field: 'city', headerName: 'City', sortable: true, filter: true, flex: 1},
-        {field: 'phone', headerName: 'Phone', sortable: true, filter: true, flex: 1},
-        {field: 'email', headerName: 'Email', sortable: true, filter: true, flex: 1},
+        {field: 'firstname', headerName: 'First Name', sortable: true, filter: true, flex: 1, editable: true},
+        {field: 'lastname', headerName: 'Last Name', sortable: true, filter: true, flex: 1, editable: true},
+        {field: 'streetaddress', headerName: 'Street Address', sortable: true, filter: true, flex: 1, editable: true},
+        {field: 'postcode', headerName: 'Postcode', sortable: true, filter: true, flex: 1, editable: true},
+        {field: 'city', headerName: 'City', sortable: true, filter: true, flex: 1, editable: true},
+        {field: 'phone', headerName: 'Phone', sortable: true, filter: true, flex: 1, editable: true},
+        {field: 'email', headerName: 'Email', sortable: true, filter: true, flex: 1, editable: true},
         {
             width: 120,
             cellRenderer: (params: ICellRendererParams) => 
@@ -74,6 +75,25 @@ const Customers = () => {
 
     }
 
+    const handleUpdate = (params: any) => {
+        fetch(params.data._links.customer.href, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params.data)
+            
+        })
+        .then(response => {
+            if(!response.ok)
+                throw new Error('Failed to fetch');
+            return response.json();
+        })
+        .then(fetchCustomer)
+        .catch(error => {
+            console.error(error);
+        })
+    }
 
     return (
         <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -85,7 +105,7 @@ const Customers = () => {
                 pagination={true}
                 paginationAutoPageSize={true}
                 theme={themeMaterial}
-                
+                onCellValueChanged={event => handleUpdate(event)}
                 />
             </div>
             <Snackbar
