@@ -1,7 +1,7 @@
 import { useState } from "react";
 import {Training}  from "../types";
 import { Button, Dialog, DialogContent, DialogTitle, TextField, DialogActions } from "@mui/material"
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Dayjs } from 'dayjs';
@@ -59,12 +59,12 @@ const AddTrainings = (props: any) => {
                     variant="standard"
                     />
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={['DatePicker']}>
-                            <DatePicker
-                            label="Controlled picker"
+                    <DemoContainer components={['DateTimePicker']}>
+                        <DateTimePicker
+                            label="Training Date & Time"
                             value={training.date}
                             onChange={(newValue) => setTraining({...training, date: newValue as Dayjs})}
-                            />
+                        />
                         </DemoContainer>
                     </LocalizationProvider>
                     <TextField
