@@ -5,14 +5,16 @@ import { Customer } from '../types'; // Customer type
 import AddCustomer from './AddCustomer';
 import Button from '@mui/material/Button';
 import { Snackbar } from '@mui/material';
+import AddTrainings from './AddTranings';
 
 
-// Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 
 const Customers = () => {
     const [customers, setCustomers] = useState<Customer[]>([]);
+    const [showAddTraining, setShowAddTraining] = useState(false);
+    const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
     const [open, setOpen] = useState(false);
     const [columnDefs] = useState<ColDef<Customer>[]>([
         {field: 'firstname', headerName: 'First Name', sortable: true, filter: true, flex: 1, editable: true},
@@ -23,7 +25,7 @@ const Customers = () => {
         {field: 'phone', headerName: 'Phone', sortable: true, filter: true, flex: 1, editable: true},
         {field: 'email', headerName: 'Email', sortable: true, filter: true, flex: 1, editable: true},
         {
-            width: 120,
+            width: 130,
             cellRenderer: (params: ICellRendererParams) => 
                 <Button
                 size="small"
@@ -32,8 +34,18 @@ const Customers = () => {
                 onClick={() => {handelDelete(params), console.log(params.data)}}
                 >Delete
                 </Button>
-            
 
+        },
+        {
+            width: 120,
+            cellRenderer: (params: ICellRendererParams) => 
+                <Button
+                size="small"
+                variant="outlined"
+                color="primary"
+                onClick={() => {handleAddTraning(params)}}
+                >Add Training
+                </Button>
         }
     ])
 
@@ -59,19 +71,21 @@ const Customers = () => {
     }
 
     const handelDelete = (params: ICellRendererParams) => {
-        fetch(params.data._links.customer.href, {
-            method: 'DELETE'
-        })
-        .then(response => {
-            if(!response.ok)
-                throw new Error('Failed to fetch');
-            return response.json();
-        })
-        .then(fetchCustomer)
-        .then(() => setOpen(true))
-        .catch(error => {
-            console.error(error);
-        });
+        if (window.confirm("Are you sure?")) {
+            fetch(params.data._links.customer.href, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if(!response.ok)
+                    throw new Error('Failed to fetch');
+                return response.json();
+            })
+            .then(fetchCustomer)
+            .then(() => setOpen(true))
+            .catch(error => {
+                console.error(error);
+            });
+        }
 
     }
 
@@ -95,9 +109,22 @@ const Customers = () => {
         })
     }
 
+    const handleAddTraning = (params: any) => {
+        setSelectedCustomer(params.data);
+        setShowAddTraining(true);
+    }
+
+
     return (
         <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column' }}>
             <AddCustomer fetchCustomer={fetchCustomer}/>
+            {showAddTraining && selectedCustomer && (
+                <AddTrainings 
+                    customer={selectedCustomer} 
+                    fetchCustomer={fetchCustomer}
+                    onClose={() => setShowAddTraining(false)} // pass this to close dialog
+                />
+            )}
             <div style={{ flex: 1 }}>
                 <AgGridReact
                 rowData={customers}

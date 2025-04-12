@@ -9,10 +9,12 @@ export type Customer = {
     id: number;
 }
 
+import { Dayjs } from 'dayjs';
+
 export type Training = {
     activity: string;
-    date: number;
-    duration: number;
+    date: Dayjs;
+    duration: string;
     id: number;
     customer: Customer;
 }
