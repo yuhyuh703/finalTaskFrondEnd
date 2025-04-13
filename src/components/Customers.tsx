@@ -6,6 +6,9 @@ import AddCustomer from './AddCustomer';
 import Button from '@mui/material/Button';
 import { Snackbar } from '@mui/material';
 import AddTrainings from './AddTranings';
+import { useRef } from 'react';
+import type { AgGridReact as AgGridReactType } from 'ag-grid-react';
+
 
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -16,6 +19,7 @@ const Customers = () => {
     const [showAddTraining, setShowAddTraining] = useState(false);
     const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
     const [open, setOpen] = useState(false);
+    const gridRef = useRef<AgGridReactType<Customer>>(null);
     const [columnDefs] = useState<ColDef<Customer>[]>([
         {field: 'firstname', headerName: 'First Name', sortable: true, filter: true, flex: 1, editable: true},
         {field: 'lastname', headerName: 'Last Name', sortable: true, filter: true, flex: 1, editable: true},
@@ -117,16 +121,40 @@ const Customers = () => {
 
     return (
         <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column' }}>
+            <div style={{flexDirection: 'row'}}>
+            <Button
+                variant="outlined"
+                onClick={() => {
+                    gridRef.current?.api.exportDataAsCsv({
+                    fileName: 'customers.csv',
+                    columnKeys: [
+                        'firstname',
+                        'lastname',
+                        'streetaddress',
+                        'postcode',
+                        'city',
+                        'phone',
+                        'email'
+                    ]
+                    });
+                }}
+                style={{ margin: '10px', alignSelf: 'flex-start' }}
+                >
+                Export Customers to CSV
+            </Button>
             <AddCustomer fetchCustomer={fetchCustomer}/>
+            </div>
+           
             {showAddTraining && selectedCustomer && (
                 <AddTrainings 
                     customer={selectedCustomer} 
                     fetchCustomer={fetchCustomer}
-                    onClose={() => setShowAddTraining(false)} // pass this to close dialog
+                    onClose={() => setShowAddTraining(false)}
                 />
             )}
             <div style={{ flex: 1 }}>
-                <AgGridReact
+            <AgGridReact
+                ref={gridRef}
                 rowData={customers}
                 columnDefs={columnDefs}
                 pagination={true}

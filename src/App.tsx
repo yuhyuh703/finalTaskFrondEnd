@@ -1,4 +1,4 @@
-import {Routes, Route, useNavigate, Outlet } from "react-router-dom";
+import {useNavigate, Outlet } from "react-router-dom";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import AppBar from "@mui/material/AppBar";
@@ -30,6 +30,7 @@ function App() {
     } else if (text === 'Traning') {
       navigate('/trainings'); // Navigate to the Trainings page
     } else if (text === 'Calendar') {
+      console.log('Calendar clicked and navigations to calendar page');
       navigate('/calendar'); // Navigate to the Calendar page
     }
   }
