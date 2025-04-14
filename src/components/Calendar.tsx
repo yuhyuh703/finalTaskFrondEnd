@@ -29,7 +29,7 @@ const CalendarPage = () => {
   });
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div style={{ width: '95vw', height: '90vh', display: 'flex', flexDirection: 'column', marginTop: '20px'}}>
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
@@ -38,8 +38,10 @@ const CalendarPage = () => {
           center: 'title',
           right: 'dayGridMonth,timeGridWeek,timeGridDay'
         }}
+        eventColor='#378006'
         events={events}
-        height="auto"
+        height= 'auto'
+       
       />
     </div>
   );

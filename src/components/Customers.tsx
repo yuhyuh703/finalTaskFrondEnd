@@ -1,176 +1,162 @@
-import {useState, useEffect } from 'react';
-import { AllCommunityModule, ModuleRegistry, ColDef, themeMaterial, ICellRendererParams } from 'ag-grid-community'; 
-import { AgGridReact } from 'ag-grid-react'; // React Data Grid Component
-import { Customer } from '../types'; // Customer type
+import { useState, useEffect, useRef } from 'react';
+import {
+  AllCommunityModule,
+  ModuleRegistry,
+  ColDef,
+  ICellRendererParams,
+} from 'ag-grid-community';
+import { AgGridReact } from 'ag-grid-react';
+import type { AgGridReact as AgGridReactType } from 'ag-grid-react';
+import { Customer } from '../types';
 import AddCustomer from './AddCustomer';
+import AddTrainings from './AddTranings';
 import Button from '@mui/material/Button';
 import { Snackbar } from '@mui/material';
-import AddTrainings from './AddTranings';
-import { useRef } from 'react';
-import type { AgGridReact as AgGridReactType } from 'ag-grid-react';
-
-
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-
 const Customers = () => {
-    const [customers, setCustomers] = useState<Customer[]>([]);
-    const [showAddTraining, setShowAddTraining] = useState(false);
-    const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
-    const [open, setOpen] = useState(false);
-    const gridRef = useRef<AgGridReactType<Customer>>(null);
-    const [columnDefs] = useState<ColDef<Customer>[]>([
-        {field: 'firstname', headerName: 'First Name', sortable: true, filter: true, flex: 1, editable: true},
-        {field: 'lastname', headerName: 'Last Name', sortable: true, filter: true, flex: 1, editable: true},
-        {field: 'streetaddress', headerName: 'Street Address', sortable: true, filter: true, flex: 1, editable: true},
-        {field: 'postcode', headerName: 'Postcode', sortable: true, filter: true, flex: 1, editable: true},
-        {field: 'city', headerName: 'City', sortable: true, filter: true, flex: 1, editable: true},
-        {field: 'phone', headerName: 'Phone', sortable: true, filter: true, flex: 1, editable: true},
-        {field: 'email', headerName: 'Email', sortable: true, filter: true, flex: 1, editable: true},
-        {
-            width: 130,
-            cellRenderer: (params: ICellRendererParams) => 
-                <Button
-                size="small"
-                variant="outlined"
-                color="error"
-                onClick={() => {handelDelete(params), console.log(params.data)}}
-                >Delete
-                </Button>
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [showAddTraining, setShowAddTraining] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+  const [open, setOpen] = useState(false);
+  const gridRef = useRef<AgGridReactType<Customer>>(null);
 
-        },
-        {
-            width: 120,
-            cellRenderer: (params: ICellRendererParams) => 
-                <Button
-                size="small"
-                variant="outlined"
-                color="primary"
-                onClick={() => {handleAddTraning(params)}}
-                >Add Training
-                </Button>
-        }
-    ])
+  const [columnDefs] = useState<ColDef<Customer>[]>([
+    { field: 'firstname', headerName: 'First Name', sortable: true, filter: true, flex: 1, editable: true },
+    { field: 'lastname', headerName: 'Last Name', sortable: true, filter: true, flex: 1, editable: true },
+    { field: 'streetaddress', headerName: 'Street Address', sortable: true, filter: true, flex: 1, editable: true },
+    { field: 'postcode', headerName: 'Postcode', sortable: true, filter: true, flex: 1, editable: true },
+    { field: 'city', headerName: 'City', sortable: true, filter: true, flex: 1, editable: true },
+    { field: 'phone', headerName: 'Phone', sortable: true, filter: true, flex: 1, editable: true },
+    { field: 'email', headerName: 'Email', sortable: true, filter: true, flex: 1, editable: true },
+    {
+      cellRenderer: (params: ICellRendererParams) => (
+        <Button
+          size="small"
+          variant="outlined"
+          color="error"
+          onClick={() => handleDelete(params)}
+        >
+          Delete
+        </Button>
+      ),
+    },
+    {
+      cellRenderer: (params: ICellRendererParams) => (
+        <Button
+          size="small"
+          variant="outlined"
+          color="primary"
+          onClick={() => handleAddTraining(params)}
+        >
+          Add Training
+        </Button>
+      ),
+    },
+  ]);
 
+  useEffect(() => {
+    fetchCustomers();
+  }, []);
 
-    useEffect(() => {
-        fetchCustomer();
-    }, []);
+  const fetchCustomers = () => {
+    fetch('https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/customers')
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch');
+        return res.json();
+      })
+      .then((data) => setCustomers(data._embedded.customers))
+      .catch((err) => console.error(err));
+  };
 
-    const fetchCustomer = () => {
-        fetch('https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/customers')
-    .then(response => {
-        if(!response.ok)
-            throw new Error('Failed to fetch');
-        return response.json();
+  const handleDelete = (params: ICellRendererParams) => {
+    if (!window.confirm('Are you sure?')) return;
+
+    fetch(params.data._links.customer.href, { method: 'DELETE' })
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to delete');
+        return res;
+      })
+      .then(() => {
+        fetchCustomers();
+        setOpen(true);
+      })
+      .catch((err) => console.error(err));
+  };
+
+  const handleUpdate = (params: any) => {
+    fetch(params.data._links.customer.href, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(params.data),
     })
-    .then(data => {
-        setCustomers(data._embedded.customers);
-        console.log(data._embedded.customers);
-    })
-    .catch(error => {
-        console.error(error);
-    });
-    }
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to update');
+        return res;
+      })
+      .then(fetchCustomers)
+      .catch((err) => console.error(err));
+  };
 
-    const handelDelete = (params: ICellRendererParams) => {
-        if (window.confirm("Are you sure?")) {
-            fetch(params.data._links.customer.href, {
-                method: 'DELETE'
+  const handleAddTraining = (params: any) => {
+    setSelectedCustomer(params.data);
+    setShowAddTraining(true);
+  };
+
+  return (
+    <div style={{ width: '95vw', height: '90vh', display: 'flex', flexDirection: 'column' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '20px',
+        }}
+      >
+        <AddCustomer fetchCustomer={fetchCustomers} />
+        <Button
+          variant= 'outlined'
+          onClick={() =>
+            gridRef.current?.api.exportDataAsCsv({
+              fileName: 'customers.csv',
+              columnKeys: ['firstname', 'lastname', 'streetaddress', 'postcode', 'city', 'phone', 'email'],
             })
-            .then(response => {
-                if(!response.ok)
-                    throw new Error('Failed to fetch');
-                return response.json();
-            })
-            .then(fetchCustomer)
-            .then(() => setOpen(true))
-            .catch(error => {
-                console.error(error);
-            });
-        }
+          }
+          style={{ alignSelf: 'flex-start' }}
+          color='primary'
+        >
+          Export Customers to CSV
+        </Button>
+      </div>
 
-    }
+      {showAddTraining && selectedCustomer && (
+        <AddTrainings
+          customer={selectedCustomer}
+          fetchCustomer={fetchCustomers}
+          onClose={() => setShowAddTraining(false)}
+        />
+      )}
 
-    const handleUpdate = (params: any) => {
-        fetch(params.data._links.customer.href, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(params.data)
-            
-        })
-        .then(response => {
-            if(!response.ok)
-                throw new Error('Failed to fetch');
-            return response.json();
-        })
-        .then(fetchCustomer)
-        .catch(error => {
-            console.error(error);
-        })
-    }
+      <div style={{ flex: 1 }}>
+        <AgGridReact
+          ref={gridRef}
+          rowData={customers}
+          columnDefs={columnDefs}
+          pagination={true}
+          paginationAutoPageSize={true}
+          onCellValueChanged={handleUpdate}
+        />
+      </div>
 
-    const handleAddTraning = (params: any) => {
-        setSelectedCustomer(params.data);
-        setShowAddTraining(true);
-    }
-
-
-    return (
-        <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column' }}>
-            <div style={{flexDirection: 'row'}}>
-            <Button
-                variant="outlined"
-                onClick={() => {
-                    gridRef.current?.api.exportDataAsCsv({
-                    fileName: 'customers.csv',
-                    columnKeys: [
-                        'firstname',
-                        'lastname',
-                        'streetaddress',
-                        'postcode',
-                        'city',
-                        'phone',
-                        'email'
-                    ]
-                    });
-                }}
-                style={{ margin: '10px', alignSelf: 'flex-start' }}
-                >
-                Export Customers to CSV
-            </Button>
-            <AddCustomer fetchCustomer={fetchCustomer}/>
-            </div>
-           
-            {showAddTraining && selectedCustomer && (
-                <AddTrainings 
-                    customer={selectedCustomer} 
-                    fetchCustomer={fetchCustomer}
-                    onClose={() => setShowAddTraining(false)}
-                />
-            )}
-            <div style={{ flex: 1 }}>
-            <AgGridReact
-                ref={gridRef}
-                rowData={customers}
-                columnDefs={columnDefs}
-                pagination={true}
-                paginationAutoPageSize={true}
-                theme={themeMaterial}
-                onCellValueChanged={event => handleUpdate(event)}
-                />
-            </div>
-            <Snackbar
-            open={open}
-            autoHideDuration={3000}
-            onClose={() => setOpen(false)}
-            message="Customer deleted"
-            ></Snackbar>
-        </div>
-    )
-}
+      <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        onClose={() => setOpen(false)}
+        message="Customer deleted"
+      />
+    </div>
+  );
+};
 
 export default Customers;

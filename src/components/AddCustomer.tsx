@@ -33,10 +33,7 @@ const AddCustomer = (prop: addCustomerProps) => {
             alert('An error occurred while adding the customer.');
         })
         .then(() => {prop.fetchCustomer(), handleClose()})
-        
-        
     }
-
     return (
         <div>
             <Button
@@ -142,10 +139,7 @@ const AddCustomer = (prop: addCustomerProps) => {
                     <Button type="submit" onClick={AddCusomter}>Add</Button>
                 </DialogActions>
             </Dialog>
-            
         </div>
     )
 }
-
-
 export default AddCustomer

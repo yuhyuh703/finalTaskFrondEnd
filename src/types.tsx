@@ -1,3 +1,5 @@
+import { Dayjs } from 'dayjs';
+
 export type Customer = {
     city: string;
     email: string;
@@ -9,8 +11,6 @@ export type Customer = {
     id: number;
 }
 
-import { Dayjs } from 'dayjs';
-
 export type Training = {
     activity: string;
     date: Dayjs;
@@ -19,4 +19,8 @@ export type Training = {
     customer: Customer;
 }
 
+export interface TrainingStatistics {
+    name: string;
+    duration: number;
+  }
 

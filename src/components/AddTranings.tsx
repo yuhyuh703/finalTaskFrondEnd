@@ -10,14 +10,11 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 
 const AddTrainings = (props: any) => {
-    console.log('addtrainings');
-    console.log(props);
 
     const [training, setTraining] = useState<Training>({} as Training);
     const { customer, fetchCustomer, onClose } = props;
 
     const handleSave = () => {
-        console.log('customer in addtrainings', customer);
         training.customer = customer._links.customer.href;;
         fetch('https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/trainings', {
             method: 'POST',
@@ -59,12 +56,12 @@ const AddTrainings = (props: any) => {
                     variant="standard"
                     />
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['DateTimePicker']}>
-                        <DateTimePicker
-                            label="Training Date & Time"
-                            value={training.date}
-                            onChange={(newValue) => setTraining({...training, date: newValue as Dayjs})}
-                        />
+                        <DemoContainer components={['DateTimePicker']}>
+                            <DateTimePicker
+                                label="Training Date & Time"
+                                value={training.date}
+                                onChange={(newValue) => setTraining({...training, date: newValue as Dayjs})}
+                            />
                         </DemoContainer>
                     </LocalizationProvider>
                     <TextField
@@ -79,19 +76,13 @@ const AddTrainings = (props: any) => {
                     fullWidth
                     variant="standard"
                     />
-                     
-                     </DialogContent>
-                        <DialogActions>
-                        <Button onClick={onClose}>Cancel</Button>
-                        <Button onClick={handleSave}>Save</Button>
-                    </DialogActions>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={onClose}>Cancel</Button>
+                    <Button onClick={handleSave}>Save</Button>
+                </DialogActions>
             </Dialog>
-
         </div>
     )
-
-
 }
-
-
 export default AddTrainings;

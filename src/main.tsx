@@ -4,7 +4,9 @@ import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import routes from "./routes.tsx"; // Import routes
 
-const router = createBrowserRouter(routes);
+const router = createBrowserRouter(routes, {
+  basename: "/finalTaskFrondEnd" // Add this line for GitHub Pages
+});
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
