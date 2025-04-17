@@ -28,11 +28,12 @@ function App() {
   };
 
   const menuItems = [
-    { text: "Customers", icon: <PeopleIcon />, path: "/customers" },
-    { text: "Training", icon: <FitnessCenterIcon />, path: "/trainings" },
-    { text: "Calendar", icon: <CalendarTodayIcon />, path: "/calendar" },
-    { text: "Statistics", icon: <BarChartIcon />, path: "/statistics" },
+    { text: "Customers", icon: <PeopleIcon />, path: "customers" },
+    { text: "Training", icon: <FitnessCenterIcon />, path: "trainings" },
+    { text: "Calendar", icon: <CalendarTodayIcon />, path: "calendar" },
+    { text: "Statistics", icon: <BarChartIcon />, path: "statistics" },
   ];
+  
 
   const DrawerList = (
     <Box sx={{ width: 250 }} onClick={toggleDrawer(false)}>
