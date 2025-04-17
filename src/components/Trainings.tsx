@@ -3,7 +3,6 @@ import {
   AllCommunityModule,
   ModuleRegistry,
   ColDef,
-  themeMaterial,
   ICellRendererParams,
 } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
