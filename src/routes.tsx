@@ -1,23 +1,37 @@
-import { RouteObject } from "react-router-dom";
-import App from "./App.tsx";
-import Customers from "./components/Customers.tsx";
-import Trainings from "./components/Trainings.tsx";
-import Calendar from "./components/Calendar.tsx";
-import Statistics from "./components/Statistics.tsx";
+// routes.tsx
+import App from "./App";
+import Customers from "./components/Customers";
+import Trainings from "./components/Trainings";
+import Calendar from "./components/Calendar"; 
+import Statistics from "./components/Statistics";
 
-const routes: RouteObject[] = [
+const routes = [
   {
-    path: '/',
+    path: "/",
     element: <App />,
     children: [
-      { path: '', element: <Customers /> }, // Default route
-      { path: 'customers', element: <Customers /> },
-      { path: 'trainings', element: <Trainings /> },
-      {path: 'calendar', element: <Calendar /> },
-      {path: 'statistics', element: <Statistics /> }
-     
-    ]
-  }
+      {
+        path: "/", // Default route
+        element: <Customers />, // Make Customers the default route
+      },
+      {
+        path: "customers",
+        element: <Customers />,
+      },
+      {
+        path: "trainings",
+        element: <Trainings />,
+      },
+      {
+        path: "calendar",
+        element: <Calendar />,
+      },
+      {
+        path: "statistics",
+        element: <Statistics />,
+      },
+    ],
+  },
 ];
 
 export default routes;

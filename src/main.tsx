@@ -4,9 +4,8 @@ import "./index.css";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 import routes from "./routes.tsx"; // Import routes
 
-const router = createHashRouter(routes, {
-  basename: "/finalTaskFrondEnd" // Add this line for GitHub Pages
-});
+// Remove the basename parameter - not needed with HashRouter
+const router = createHashRouter(routes);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
