@@ -11,8 +11,8 @@ const routes = [
     element: <App />,
     children: [
       {
-        path: "/", // Default route
-        element: <Customers />, // Make Customers the default route
+        path: "/",
+        element: <Customers />, 
       },
       {
         path: "customers",

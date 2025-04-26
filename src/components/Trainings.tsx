@@ -36,7 +36,7 @@ const Trainings = () => {
     },
   ]);
 
-  // Fetch trainings from API
+
   const fetchTrainings = useCallback(async () => {
     try {
       const response = await fetch(
@@ -59,7 +59,7 @@ const Trainings = () => {
 
   useEffect(() => {
     fetchTrainings();
-  }, [fetchTrainings]);
+  }, []);
 
   // Handle delete action
   const handleDelete = async (params: ICellRendererParams) => {

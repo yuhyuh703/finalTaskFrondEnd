@@ -16,7 +16,7 @@ const CalendarPage = () => {
       .catch(err => console.error(err));
   }, []);
 
-  // Transform trainings into calendar events
+  
     const events = trainings.map(training => {
     const start = dayjs(training.date);
     const end = start.add(Number(training.duration), 'minute');
