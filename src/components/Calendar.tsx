@@ -29,7 +29,7 @@ const CalendarPage = () => {
   });
 
   return (
-    <div style={{ width: '95vw', height: '90vh', display: 'flex', flexDirection: 'column', marginTop: '20px'}}>
+    <div style={{ width: '95vw', height: '100%', display: 'flex', flexDirection: 'column', marginTop: '20px'}}>
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
